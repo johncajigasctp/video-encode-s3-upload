@@ -22,7 +22,7 @@ SET filename=%filenameOriginal: =-%
 SET ext=%~x1
 SET webm=%pathname%%filename%_web.webm
 set mp4=%pathname%%filename%_web.mp4
-ffmpeg -i "%pathname%%filenameOriginal%%ext%" -vcodec libvpx-vp9 -b:v 1M -acodec libvorbis "%webm%" -vcodec h264 -acodec aac -strict -2 "%mp4%" -vframes 1 -an -ss 15 "%pathname%%filename%.jpg"
+ffmpeg -i "%pathname%%filenameOriginal%%ext%" -vcodec libvpx-vp9 -vf "scale='min(720,iw)':-2" -acodec libvorbis "%webm%" -vcodec h264 -crf 22 -vf "scale='min(720,iw)':-2" -acodec aac -strict -2 "%mp4%" -vframes 1 -an -ss 15 -vf "scale='min(720,iw)':-2" "%pathname%%filename%_web.jpg"
 aws s3 sync "%pathname%/" s3://%destination%/ --exclude "*" --include "%filename%*" --acl "public-read"
 echo %date% %time%,%filename%_web >> "%pathname%output.csv"
 SHIFT
